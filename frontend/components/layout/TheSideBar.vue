@@ -96,12 +96,6 @@ export default {
           isVisible: this.isProjectAdmin
         },
         {
-          icon: mdiCommentAccountOutline,
-          text: 'Comments',
-          link: 'comments',
-          isVisible: this.isProjectAdmin
-        },
-        {
           icon: mdiBookOpenOutline,
           text: this.$t('guideline.guideline'),
           link: 'guideline',
