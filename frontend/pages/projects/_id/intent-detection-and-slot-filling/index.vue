@@ -14,6 +14,7 @@
       <toolbar-mobile :total="docs.count" class="d-flex d-sm-none" />
     </template>
     <template #content>
+
       <v-card v-shortkey="shortKeys" @shortkey="addOrRemoveCategory">
         <v-card-title>
           <label-group
@@ -25,17 +26,27 @@
           />
         </v-card-title>
         <v-divider />
-        <div class="annotation-text pa-4">
-          <entity-editor
-            :dark="$vuetify.theme.dark"
-            :rtl="isRTL"
-            :text="doc.text"
-            :entities="spans"
-            :entity-labels="spanTypes"
-            @addEntity="addSpan"
-            @click:entity="updateSpan"
-            @contextmenu:entity="deleteSpan"
-          />
+        <div id="sidebarContainer">
+          <div id="smallSidebar">
+              <div>
+                Sidebar
+              </div>
+              <div>
+                Pain
+              </div>
+            </div>
+          <div class="annotation-text pa-4">
+            <entity-editor
+              :dark="$vuetify.theme.dark"
+              :rtl="isRTL"
+              :text="doc.text"
+              :entities="pans"
+              :entity-labels="spanTypes"
+              @addEntity="addSpan"
+              @click:entity="updateSpan"
+              @contextmenu:entity="deleteSpan"
+            />
+          </div>
         </div>
       </v-card>
     </template>
@@ -43,6 +54,7 @@
       <annotation-progress :progress="progress" />
       <list-metadata :metadata="doc.meta" class="mt-4" />
     </template>
+    
   </layout-text>
 </template>
 <script>
@@ -229,5 +241,24 @@ export default {
   line-height: 2rem;
   font-family: 'Roboto', sans-serif !important;
   opacity: 0.6;
+  flex: 1;
+
 }
+
+#smallSidebar {
+  background-color: lightblue;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  width: 150px;
+
+}
+
+#sidebarContainer {
+  display: flex;
+  justify-content: center;
+}
+
+
+
 </style>

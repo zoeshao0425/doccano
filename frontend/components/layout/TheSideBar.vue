@@ -33,7 +33,7 @@ import {
   mdiBookOpenOutline,
   mdiChartBar,
   mdiCog,
-  mdiCommentAccountOutline,
+  // mdiCommentAccountOutline, 
   mdiDatabase,
   mdiHome,
   mdiLabel,
