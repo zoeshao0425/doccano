@@ -27,14 +27,9 @@
         </v-card-title>
         <v-divider />
         <div id="sidebarContainer">
-          <div id="smallSidebar">
-              <div>
-                Sidebar
-              </div>
-              <div>
-                Pain
-              </div>
-            </div>
+          <new-side-bar>
+            
+          </new-side-bar>
           <div class="annotation-text pa-4">
             <entity-editor
               :dark="$vuetify.theme.dark"
@@ -65,6 +60,7 @@ import AnnotationProgress from '@/components/tasks/sidebar/AnnotationProgress.vu
 import LabelGroup from '@/components/tasks/textClassification/LabelGroup'
 import ToolbarLaptop from '@/components/tasks/toolbar/ToolbarLaptop'
 import ToolbarMobile from '@/components/tasks/toolbar/ToolbarMobile'
+import newSideBar from '@/components/newSideBar.vue'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -75,7 +71,8 @@ export default {
     ListMetadata,
     LabelGroup,
     ToolbarLaptop,
-    ToolbarMobile
+    ToolbarMobile,
+    newSideBar
   },
 
   layout: 'workspace',
