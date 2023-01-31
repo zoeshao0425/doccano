@@ -3,11 +3,18 @@
       <div class="sidebar-header">
         <h3>Possible Diseases</h3>
       </div>
-      <ul class="nav nav-pills nav-stacked">
-        <li v-for="item in items" :key="item.id">
-          <a :href="item.link">{{ item.text }}</a >
-        </li>
-      </ul>
+      <v-list-item-group v-model="selected" mandatory>
+        <v-list-item
+        v-for="item in items" :key="item.id"
+        @click="$router.push(localePath(`/projects/${$route.params.id}/${item.link}`))"
+       >
+       <v-list-item-content>
+          <v-list-item-title>
+            {{ item.text }}
+          </v-list-item-title>
+        </v-list-item-content>
+        </v-list-item>
+      </v-list-item-group>
     </div>
   </template>
 
@@ -16,9 +23,9 @@
     data() {
       return {
         items: [
-          { id: 1, text: "Anxiety", link: "/",},
+          { id: 1, text: "Anxiety", link: "/intent-detection-and-slot-filling/newPage",},
           { id: 2, text: "Pain", link: "/" },
-          { id: 3, text: "Something", link: "/" }
+          { id: 3, text: "Something else", link: "/" }
         ]
       };
     }
