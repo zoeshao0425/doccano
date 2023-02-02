@@ -5,7 +5,7 @@
       </div>
       <v-list-item-group v-model="selected" mandatory class="page-numbers-container">
         <v-list-item v-for="n in totalPages" :key="n" :class="{'pages':n}"
-          @click="$router.push(`/projects`)">
+        @click="$router.push(localePath(`/projects/testNewPage`))">
           <v-list-item-content class="page-number-content">
             <v-list-item-title class="page-number-text">
               {{ n }}
