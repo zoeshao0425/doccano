@@ -5,7 +5,7 @@
     </div>
     <v-list-item-group v-model="selected" mandatory>
       <v-list-item v-for="(item, i) in filteredItems" :key="i"
-        @click="$router.push(`/projects/${$route.params.id}/${item.link}`)">
+        @click="$router.push(localePath(`/projects/${$route.params.id}/${item.link}`))">
         <v-list-item-content>
           <v-list-item-title>
             {{ item.text }}
@@ -42,7 +42,7 @@ export default {
         {
           id: 1,
           text: "Pain",
-          link: '/',
+          link: 'intent-detection-and-slot-filling/newpage',
           isVisible: true
         },
         {

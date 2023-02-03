@@ -4,11 +4,11 @@
         <h3>Pages in which "pain" appears:</h3>
       </div>
       <v-list-item-group v-model="selected" mandatory class="page-numbers-container">
-        <v-list-item v-for="n in totalPages" :key="n" :class="{'pages':n}"
-        @click="$router.push(localePath(`/projects/testNewPage`))">
+        <v-list-item v-for="(page, i) in pageNum" :key="i"
+        @click="$router.push(`/projects/${$route.params.id}/${page.link}`)">
           <v-list-item-content class="page-number-content">
             <v-list-item-title class="page-number-text">
-              {{ n }}
+              {{ page.id }}
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -36,22 +36,29 @@
         totalPages: 20
       }
     },
-  
+
     computed: {
-      filteredItems() {
+      pageNum() {
         const items = [
           {
             id: 1,
-            text: "Pain",
-            link: '/newpage',
+            text: "1",
+            link: 'intent-detection-and-slot-filling/newpage/test',
             isVisible: true
           },
           {
             id: 2,
-            text: "Anxiety",
-            link: '/',
+            text: "2",
+            link: 'intent-detection-and-slot-filling/newpage/test',
+            isVisible: true
+          },
+          {
+            id: 3,
+            text: "3",
+            link: 'intent-detection-and-slot-filling/newpage/test',
             isVisible: true
           }
+
   
         ]
         return items.filter((item) => item.isVisible)
