@@ -47,8 +47,9 @@ import LabelGroup from '@/components/tasks/textClassification/LabelGroup'
 import ToolbarLaptop from '@/components/tasks/toolbar/ToolbarLaptop'
 import ToolbarMobile from '@/components/tasks/toolbar/ToolbarMobile'
 import { mapGetters } from 'vuex'
-import NewSideBar from '@/components/NewSideBar.vue'
-import PageNumbers from '@/components/PageNumbers.vue'
+import PageNumbers from '~/components/PageNumbersAndParagraphs.vue'
+import NewSideBar from '~/components/NewSideBar.vue'
+
 
 
 export default {
@@ -244,9 +245,11 @@ export default {
   justify-content: center;
 }
 
-.page-numbers {
+.pages {
   padding: 20px 20px;
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 </style>

@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <layout-text v-if="doc.id">
     <template #header>
       <toolbar-laptop
@@ -249,4 +249,4 @@ export default {
   flex: 1;
 }
 
-</style>
+</style> -->
