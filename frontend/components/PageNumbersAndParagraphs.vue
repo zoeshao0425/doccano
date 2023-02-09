@@ -31,7 +31,11 @@
           @click:entity="updateSpan" 
           @contextmenu:entity="deleteSpan" />
       </div>
-
+      
+      <div> 
+        <button class="view-button" @click="$router.push('/demo/image-caption')">View Page</button>
+        <button class="save-button" @click="savePage">Save</button>
+      </div>
     </div>
   </div>
 </template>
@@ -102,6 +106,9 @@ export default {
     }
   },
   methods: {
+    savePage(){
+      this.$router.push('/demo/image-caption')
+    },
     selectItem(item) {
       // If clicked on a new item without unclicking the old item, set 
       // isSelected = false for the old item
@@ -118,6 +125,7 @@ export default {
         this.selectedItem = null
       }
     },
+
 
     async listSpan(docId) {
       const spans = await this.$services.sequenceLabeling.list(this.projectId, docId)
@@ -245,6 +253,34 @@ export default {
 .v-list-item {
   padding: 0 0;
   min-height: 36px;
+}
+
+.view-button {
+  background-color: #4CAF50; 
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px; 
+}
+
+.save-button {
+  background-color: #FF0000; 
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
 }
 </style>
 
