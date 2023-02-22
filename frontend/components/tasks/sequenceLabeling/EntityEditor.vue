@@ -16,7 +16,8 @@
       @click:relation="onRelationClicked"
       @contextmenu:entity="deleteEntity"
       @contextmenu:relation="deleteRelation"
-    />
+    >
+    </v-annotator>
     <labeling-menu
       :opened="entityMenuOpened"
       :x="x"
@@ -63,7 +64,7 @@ export default Vue.extend({
     text: {
       type: String,
       default: '',
-      required: true
+      required: false
     },
     entities: {
       type: Array as PropType<SpanDTO[]>,
@@ -113,7 +114,11 @@ export default Vue.extend({
       endOffset: 0,
       entity: null as any,
       relation: null as any,
-      selectedEntities: [] as SpanDTO[]
+      selectedEntities: [] as SpanDTO[],
+      selectedItem: {
+        passage: "<p>The quick brown fox jumps over the lazy dog</p>",
+        selected: false,
+      },
     }
   },
 
@@ -138,6 +143,9 @@ export default Vue.extend({
   },
 
   methods: {
+    annotatedText() {
+      return this.selectedItem.passage;
+    },
     setOffset(startOffset: number, endOffset: number) {
       this.startOffset = startOffset
       this.endOffset = endOffset

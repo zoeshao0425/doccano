@@ -1,11 +1,12 @@
 <template>
-  <div class="pages">
+  <div>
     <div class="page-numbers">
       <div class="page-numbers-title">
         <h3>Pages in which "pain" appears:</h3>
       </div>
       <v-list-item-group v-model="selected" mandatory class="page-numbers-container">
         <v-list-item v-for="(page, i) in pageNum" :key="i" 
+          :class="{ 'confirmed': page.isConfirmed}"
           @click="selectItem(page)">
           <v-list-item-content class="page-number-content">
             <v-list-item-title class="page-number-text">
@@ -29,12 +30,12 @@
           :entity-labels="spanTypes" 
           @addEntity="addSpan" 
           @click:entity="updateSpan" 
-          @contextmenu:entity="deleteSpan" />
+          @contextmenu:entity="deleteSpan">
+        </entity-editor>
       </div>
-      
+        
       <div> 
         <button class="view-button" @click="$router.push('/demo/image-caption')">View Page</button>
-        <button class="save-button" @click="savePage">Save</button>
       </div>
     </div>
   </div>
@@ -66,7 +67,8 @@ export default {
       // a page item if an item is clicked. Display that item's passage
       // null if no page is selected. Display nothing
       selectedItem: null,
-
+      // wordToHighlight: 'pain',
+      // highlightClass: 'highlighted',
       docs: [],
       spans: [],
       categories: [],
@@ -85,21 +87,145 @@ export default {
           text: "1",
           link: "intent-detection-and-slot-filling/newpage/test",
           isSelected: false,
-          passage: "Tension-type headache, unspecified, intractable details; onset was approximately 2 months ago. The location is primarily left and right occipital and behind the eyes. The pain radiates to the left, right, and posterior neck, left and right eye, and bilateral ears. Ms. Williams denies having significant prior headaches. She characterizes it as severe."
+          isConfirmed: true,
+          passage: `Subjective:
+            CC: Ms. Williams is a 77 year old female. Established Patient She is here today following a transition of care from the emergency department ( Mercy Medical Center on 03/21/2022 ). She presents with headache Tension. Medications reviewed with patient Per pt, no refills needed. (Walgreens in Atwater) , Consult on pain medicationER REPORT IN DOCMAN
+            HPI:
+            Ms. Williams presents in follow up from ER. She was seen in the ER on 03/21/2022.
+            Patient was admitted to the hospital due to (FALL)
+            Diagnosis on Discharge: Closed Head Injury (S09.90XA) Scalp laceration (S01.01XA), Fall (W19.XXXA) No labs were done.
+            The following radiology tests were done: Spine CT: (CT Cervical Spine Without Contrast: Findings: NOrmal craniovertebral junction. Noraml anterio atlantoaxial artculation. NOrmal odontoid process. Noram cervical lordosis. Normal verebral bodies and posterior osseous elements. NO acute fracture or listesis. Moderat multilevel degerative disc disease. Normal visulized soft tissue structures. Impression: Multilevel degerative changes, as described above).
+            The following procedures were done: laceration repair on the prosterio scalp
+            The patient received Insturctions to follow up with PCP in 1-3 days.
+            The patient's course has been stable and nonprogressive.
+            It is of moderate intensity. The patient rates her baseline quality of life (prior to diagnosis) as fair. The quality of life
+            now since diagnosis is much worse.
+            Tension-type headache, unspecified, intractable details; onset was approximately 2 months ago. The location is primarily left and right occipital and behind the eyes. The pain radiates to the left, right, and posterior neck, left and right eye, and bilateral ears. Ms. Williams denies having significant prior headaches. She characterizes it as severe.
+            Associated symptoms include chills, nausea, pain with chewing, rhinorrhea, difficulty sleeping and stiff neck. 
+            She denies fever, pain in teeth, sinus congestion, vision disturbance, vomiting or watery eyes. The headache is exacerbated with sitting up. It is improved with sitting back on recliner and cold compresses and heat. Pertinent past medical history includes allergies and head injury. She denies a history of migraines, tension headaches, sleep apnea, CNS tumor or CVA.
+            Dx with laceration without foreign body of scalp, initial encounter; Ms. Williams presents with a laceration of the scalp. INFECTION? increased pain (other than expected from the injury), but not redness, drainage, injury site warmth, fever or swollen lymph nodes The injury is due to a Per pt, states that she was at a laundromat and she fell on her back, lost conscious at the moment of the fall.. This occurred 03/21/22. She has already staples were applied. Her last Tetanus booster was 11/29/2021.
+            ROS:
+            CONSTITUTIONAL: Negative for chills and fever.
+            CARDIOVASCULAR: Negative for chest pain, palpitations and pedal edema.
+            RESPIRATORY: Negative for recent cough, dyspnea and frequent wheezing.
+            GASTROINTESTINAL: Negative for abdominal pain, acid reflux symptoms, dysphagia, constipation, diarrhea, nausea
+            and vomiting.
+            MUSCULOSKELETAL: Negative for arthralgias, myalgias and stiff neck.
+            NEUROLOGICAL: Negative for dizziness, headaches, tremor, vertigo, weakness and gait disturbance.
+            PSYCHIATRIC: Negative for anxiety and depression.`        
         },
         {
           id: 2,
           text: "2",
           link: "intent-detection-and-slot-filling/newpage/test",
           isSelected: false,
-          passage: "2"
+          isConfirmed: true,
+          passage: `Current Problems:
+            Last Reviewed on 5/24/2022 11:49 AM by Shannon, Arneisha
+            Other iron deficiency anemias
+            Pure hypercholesterolemia, unspecified
+            Low back pain
+            Discitis, unspecified, lumbosacral region
+            Sleep related leg cramps
+            Gastro-esophageal reflux disease without esophagitis
+            Iron deficiency anemia secondary to blood loss (chronic)
+            Sideropenic dysphagia
+            Heberden's nodes (with arthropathy)
+            Bouchard's nodes (with arthropathy)
+            Rheumatoid arthritis, unspecified
+            Chronic kidney disease, stage 3 (moderate)
+            Glaucoma with increased episcleral venous pressure, bilateral
+            Other asthma
+            Type 2 diabetes mellitus without complications
+            Insomnia, unspecified
+            Nicotine dependence, cigarettes, in remission
+            Unspecified disturbances of skin sensation
+            Laceration without foreign body of scalp, initial encounter
+            Unspecified injury of head, initial encounter
+            Encounter for follow-up examination after completed treatment for conditions other than malignant neoplasm
+            Tension-type headache, unspecified, intractable
+            Immunizations:
+            Influenza, high dose seasonal (FLUZONE HIGH-DOSE 2019-2020) 10/22/2019
+            influenza, high-dose, quadrivalent (FLUZONE HIGH-DOSE QUAD 2020-21) 11/23/2020
+            influenza, high-dose, quadrivalent (FLUZONE HIGH-DOSE QUAD 2021-22) 11/8/2021
+            Td (adult), 5 Lf tetanus toxoid, preservative free, adsorbed (TENIVAC) 11/29/2021
+            Prevnar 13 (Pneumococcal PCV 13) 11/17/2016
+            Fluzone (3 + years dose) 11/8/2018
+            Fluzone High-Dose pf (>=65 yr) 11/7/2013
+            Fluzone High-Dose pf (>=65 yr) 10/2/2014
+            Fluzone High-Dose pf (>=65 yr) 9/1/2016
+            Fluzone High-Dose pf (>=65 yr) 9/29/2017
+            PNEUMOVAX 23 (Pneumococcal PPV23) 5/14/2009
+            Tdap (Tetanus, reduced diph, acellular pertussis) 5/14/2009
+            Allergies:
+            Last Reviewed on 5/24/2022 11:49 AM by Shannon, Arneisha
+            Codeine Phosphate: Anxiousness`,
         },
         {
           id: 3,
           text: "3",
           link: "intent-detection-and-slot-filling/newpage/test",
           isSelected: false,
-          passage: "3"
+          isConfirmed: false,
+          passage: `Exams:
+            GENERAL: well developed, well nourished, in no apparent distress
+            EYES: lids and conjunctiva are normal; pupils and irises are normal;
+            NECK: Neck is supple with full range of motion;
+            RESPIRATORY: normal respiratory rate and pattern with no distress; normal breath sounds with no rales, rhonchi,
+            wheezes or rubs;
+            CARDIOVASCULAR: normal rate; regular rhythm; no murmurs; no edema or significant varicosities;
+            MUSCULOSKELETAL: digits/nails: no clubbing, cyanosis, or evidence of ischemia or infection; gait: slowed and uses cane; grossly normal tone and muscle strength;
+            NEUROLOGIC: cranial nerves II-XII grossly intact;
+            PSYCHIATRIC: mental status: alert and oriented x 3; appropriate affect and demeanor;
+            Assessment:
+            M46.47 Discitis, unspecified, lumbosacral region
+            E11.9 Type 2 diabetes mellitus without complications
+            E78.00 Pure hypercholesterolemia, unspecified
+            ORDERS:
+            Meds Prescribed:
+            [Refilled] traMADol 50 mg oral tablet [take 1 tablet (50 mg) by oral route every 12 hours as needed], #30 (thirty)
+            tablets, Refills: 0 (zero)
+            Lab Orders:
+            MLIS Hemoglobin; glycosylated (A1C) (In-House)
+            MLIS Basic metabolic panel (Calcium, total). This panel must include the following: Calcium (82310), Carbon dioxide (82374), Chloride (82435), Creatinine (82565), Glucose (82947), Potassium (84132), Sodium (84295), Urea nitrogen (BUN) (84520) (Send-Out)
+            MLIS Microalbumin, semiquantitative (In-House)
+            MLIS Alanine amino transferase (Send-Out)
+            MLIS Aspartate amino transferase (Send-Out)
+            MLIS Lipid panel (total cholesterol, HDL, triglycerides) (Send-Out)
+            MLIS Low density lipoprotein assay (Send-Out)
+            Procedures Ordered:
+            Collection of venous blood by venipuncture (In-House)
+            Other Orders:
+            Advance care planning dicussed with patient, first 30 min (In-House)
+            TB Risk Assessment (Send-Out)
+            Non-Fasting (In-House)
+
+            Plan:
+            Discitis, unspecified, lumbosacral regionUnder care of Dr. Miranda at MFA
+            Prescriptions:
+            [Refilled] traMADol 50 mg oral tablet [take 1 tablet (50 mg) by oral route every 12 hours as needed], #30 (thirty)
+            tablets, Refills: 0 (zero)
+            Type 2 diabetes mellitus without complications
+            LABORATORY: Labs ordered to be performed today include venipuncture, Non Fasting, HgbA1C Basic
+            Metabolic Panel urine microalbumin, and ALT AST Lipid panel LDL.
+            Orders:
+            36415 Collection of venous blood by venipuncture (In-House)
+            FASTNON Non-Fasting (In-House)
+            83036 MLIS Hemoglobin; glycosylated (A1C) (In-House)
+            80048 MLIS Basic metabolic panel (Calcium, total). This panel must include the following: Calcium (82310), Carbon
+            dioxide (82374), Chloride (82435), Creatinine (82565), Glucose (82947), Potassium (84132), Sodium (84295), Urea
+            nitrogen (BUN) (84520) (Send-Out)
+            82044 MLIS Microalbumin, semiquantitative (In-House)
+            84460 MLIS Alanine amino transferase (Send-Out)
+            84450 MLIS Aspartate amino transferase (Send-Out)
+            80061 MLIS Lipid panel (total cholesterol, HDL, triglycerides) (Send-Out)
+            83721 MLIS Low density lipoprotein assay (Send-Out)
+            Patient Education Handouts:
+            Non-Insulin Dependent Diabetes Mellitus (NIDDM)
+            Pure hypercholesterolemia, unspecified
+            Patient Education Handouts:
+            Hyperlipidemia (Hyperlipoproteinemia)
+            `,
         }
       ];
       return items;
@@ -109,6 +235,14 @@ export default {
     savePage(){
       this.$router.push('/demo/image-caption')
     },
+    
+    // not using this method right now
+    textToDisplay() {
+    const passageToHighlight = this.selectedItem.passage
+    const highlighted = passageToHighlight.replace(/pain/gi, '<span class="highlighted">pain</span>');
+    return highlighted;
+    },
+
     selectItem(item) {
       // If clicked on a new item without unclicking the old item, set 
       // isSelected = false for the old item
@@ -225,7 +359,7 @@ export default {
 }
 
 .page-numbers {
-  margin-bottom: 15px;
+  margin-bottom: 25px;
 }
 
 .page-numbers-title {
@@ -241,10 +375,11 @@ export default {
 
 .page-number-content {
   padding: 0 0;
+  
 }
 
 .page-number-text {
-  color: rgb(25, 118, 210);
+  color: black;
   display: flex;
   justify-content: center;
   font-size: 16px;
@@ -253,34 +388,25 @@ export default {
 .v-list-item {
   padding: 0 0;
   min-height: 36px;
+  background-color: rgb(244, 186, 186)
 }
 
+.confirmed {
+  background-color: rgb(185, 244, 197)
+}
 .view-button {
-  background-color: #4CAF50; 
+  background-color: #007bff;
+  color: #fff;
   border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
+  padding: 10px;
+  border-radius: 5px;
   cursor: pointer;
-  border-radius: 5px; 
 }
 
-.save-button {
-  background-color: #FF0000; 
-  border: none;
-  color: white;
-  padding: 15px 32px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  margin: 4px 2px;
-  cursor: pointer;
-  border-radius: 5px;
+.highlighted {
+  background-color: yellow;
+  color: blue;
 }
+
 </style>
 

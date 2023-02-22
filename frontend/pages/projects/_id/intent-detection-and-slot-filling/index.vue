@@ -26,9 +26,16 @@
           />
         </v-card-title>
         <v-divider />
+
+        <!-- Contains the sidebar and the page numbers display -->
         <div id="sidebarContainer">
           <new-side-bar/>
-          <page-numbers/>
+          <!-- TODO: only show page numbers when clicked on a disease -->
+          <div v-if="true" class="pages">
+            <page-numbers/>
+          </div>
+          <div v-if="false" class="profile">
+          </div>
         </div>
       </v-card>
     </template>
@@ -80,7 +87,7 @@ export default {
       project: {},
       exclusive: false,
       enableAutoLabeling: false,
-      progress: {}
+      progress: {},
     }
   },
 
@@ -118,7 +125,7 @@ export default {
       } else {
         return this.docs.items[0]
       }
-    }
+    },
   },
 
   watch: {
@@ -250,6 +257,11 @@ export default {
   flex: 1;
   display: flex;
   flex-direction: column;
+}
+
+.profile {
+  padding: 20px 20px;
+  flex: 1;
 }
 
 </style>

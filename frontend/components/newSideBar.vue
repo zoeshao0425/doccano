@@ -5,7 +5,7 @@
     </div>
     <v-list-item-group v-model="selected" mandatory>
       <v-list-item v-for="(item, i) in filteredItems" :key="i"
-        @click="$router.push(localePath(`/projects/${$route.params.id}/${item.link}`))">
+        @click="selectItem(item)">
         <v-list-item-content>
           <v-list-item-title>
             {{ item.text }}
@@ -33,6 +33,7 @@ export default {
 
   data() {
     return {
+      selectedItem: null,
     }
   },
 
@@ -42,21 +43,37 @@ export default {
         {
           id: 1,
           text: "Pain",
-          link: 'intent-detection-and-slot-filling/newpage',
-          isVisible: true
+          isSelected: false
         },
         {
           id: 2,
           text: "Anxiety",
-          link: '/',
-          isVisible: true
+          isSelected: false
         }
-
-      ]
-      return items.filter((item) => item.isVisible)
+      ];
+      return items
     }
   },
+  
+  methods : {
+    selectItem(item) {
+      // If clicked on a new item without unclicking the old item, set 
+      // isSelected = false for the old item
+      if (this.selectedItem != null && this.selectedItem !== item) {
+        this.selectedItem.isSelected = false
+      }
+      
+      item.isSelected = !item.isSelected
 
+      // update the selected item
+      if (item.isSelected) {
+        this.selectedItem = item
+      } else {
+        this.selectedItem = null
+      }
+    },
+    
+  }
 }
 </script>
 
