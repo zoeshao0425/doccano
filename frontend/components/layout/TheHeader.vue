@@ -1,7 +1,7 @@
 <template>
   <v-app-bar app clipped-left>
     <slot name="leftDrawerIcon" />
-    <nuxt-link v-if="!isAuthenticated" to="/" style="line-height: 0">
+    <nuxt-link  to="/" style="line-height: 0">
       <img src="~/assets/icon.png" height="48" />
     </nuxt-link>
     <v-toolbar-title v-if="!isAuthenticated" class="ml-2 d-none d-sm-flex">

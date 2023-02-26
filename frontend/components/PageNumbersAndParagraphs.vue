@@ -67,8 +67,6 @@ export default {
       // a page item if an item is clicked. Display that item's passage
       // null if no page is selected. Display nothing
       selectedItem: null,
-      // wordToHighlight: 'pain',
-      // highlightClass: 'highlighted',
       docs: [],
       spans: [],
       categories: [],

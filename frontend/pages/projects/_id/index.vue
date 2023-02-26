@@ -1,9 +1,16 @@
 <template>
   <v-card>
-    <v-card-title>
-      {{ $t('projectHome.welcome') }}
-    </v-card-title>
-    <v-stepper v-model="e6" vertical non-linear>
+    <div class="top-container">
+      <v-card-title>
+        {{ $t('projectHome.welcome') }}
+      </v-card-title>
+      <nuxt-link :to="localePath(`/projects/${$route.params.id}/dataset`)">
+        <button class="my-button">Next</button>
+      </nuxt-link>
+    </div>
+
+    <img src="~/assets/example.png">
+    <!-- <v-stepper v-model="e6" vertical non-linear>
       <div v-for="(item, index) in items" :key="index">
         <v-stepper-step :complete="e6 > index + 1" :step="index + 1" editable>
           {{ item.title }}
@@ -20,7 +27,7 @@
           </v-btn>
         </v-stepper-content>
       </div>
-    </v-stepper>
+    </v-stepper> -->
   </v-card>
 </template>
 
@@ -35,26 +42,23 @@ export default {
   data() {
     return {
       e6: 1,
-      items: [
-        { title: this.$t('projectHome.importData'), videoId: 'dA4ID1DSxCE' },
-        { title: this.$t('projectHome.createLabels'), videoId: '1bSML270quU' },
-        { title: this.$t('projectHome.addMembers'), videoId: 'NI09dcBz-qA' },
-        {
-          title: this.$t('projectHome.defineGuideline'),
-          videoId: 'AvvX3Xs32nA'
-        },
-        {
-          title: this.$t('projectHome.annotateDataset'),
-          videoId: 'F3XoSdyiMhA'
-        },
-        {
-          title: this.$t('projectHome.viewStatistics'),
-          videoId: 'kfRpa0mNQMY'
-        },
-        { title: this.$t('projectHome.exportDataset'), videoId: 'Pfy_QcHEeQ4' }
-      ]
+      
     }
   },
+
+  computed: {
+    projectId() {
+      return this.$route.params.id
+    },
+    item() {
+      if (_.isEmpty(this.items) || this.items.items.length === 0) {
+        return {}
+      } else {
+        return this.items.items[0]
+      }
+    }
+  },
+
 
   methods: {
     next() {
@@ -66,3 +70,24 @@ export default {
   }
 }
 </script>
+
+<style>
+
+  .top-container {
+    display: flex;
+    align-items: center;
+  }
+  .my-button {
+  background-color: rgb(25,118,210);
+  border: none;
+  color: white;
+  padding: 8px 22px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 20px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 5px;
+  }
+</style>
