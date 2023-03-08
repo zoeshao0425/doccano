@@ -1,4 +1,5 @@
 <template>
+  <!-- render a BaseCard component with the following props and listeners -->
   <base-card
     :title="title"
     :agree-text="buttonTrueText"
@@ -7,8 +8,10 @@
     @cancel="cancel"
   >
     <template #content>
+      <!-- display the message passed as a prop -->
       {{ message }}
-      <v-list dense>
+      <!-- if "items" prop is provided, render a list of items with "itemKey" as the key -->
+      <v-list dense v-if="items.length">
         <v-list-item v-for="(item, i) in items" :key="i">
           <v-list-item-content>
             <v-list-item-title>{{ item[itemKey] }}</v-list-item-title>
@@ -61,9 +64,11 @@ export default Vue.extend({
 
   methods: {
     ok() {
+      // emit the "ok" event to the parent component
       this.$emit('ok')
     },
     cancel() {
+      // emit the "cancel" event to the parent component
       this.$emit('cancel')
     }
   }
