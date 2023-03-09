@@ -1,4 +1,5 @@
 <template>
+  <!--  <v-data-table> component that displays a table of comments, with the ability to search and paginate the results -->
   <v-data-table
     :value="value"
     :headers="headers"
@@ -19,6 +20,7 @@
     show-select
     @input="$emit('input', $event)"
   >
+  <!-- The table is populated using the items prop, which should be an array of CommentReadDTO objects.  -->
     <template #[`item.createdAt`]="{ item }">
       <span>{{
         item.createdAt | dateParse('YYYY-MM-DDTHH:mm:ss') | dateFormat('DD/MM/YYYY HH:mm')
@@ -66,16 +68,19 @@ export default Vue.extend({
       default: false,
       required: true
     },
+    // The items are an array of CommentReadDTO objects
     items: {
       type: Array as PropType<CommentItem[]>,
       default: () => [],
       required: true
     },
+    // The table's selected items are controlled using the value prop.
     value: {
       type: Array as PropType<CommentItem[]>,
       default: () => [],
       required: true
     },
+    // The total prop is used to display the total number of comments in the tabl
     total: {
       type: Number,
       default: 0,
@@ -97,7 +102,8 @@ export default Vue.extend({
       mdiMagnify
     }
   },
-
+// The watch method watches for changes to the search and options properties and emits an update:
+// query event with the updated search query.
   watch: {
     options: {
       handler() {
