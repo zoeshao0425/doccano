@@ -1,3 +1,4 @@
+<!-- The login page -->
 <template>
   <v-app id="inspire">
     <v-main>

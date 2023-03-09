@@ -1,3 +1,4 @@
+<!-- Import dataset page -->
 <template>
   <v-card>
     <v-card-title>
@@ -7,6 +8,7 @@
       <v-overlay :value="isImporting">
         <v-progress-circular indeterminate size="64" />
       </v-overlay>
+      <!-- File format selection -->
       <v-select
         v-model="selected"
         :items="catalog"
@@ -39,6 +41,7 @@
           </template>
         </v-select>
       </v-form>
+      <!-- Display example data -->
       <v-sheet
         v-if="selected"
         :dark="!$vuetify.theme.dark"
@@ -47,12 +50,14 @@
       >
         <pre>{{ example }}</pre>
       </v-sheet>
+      <!-- Display example data for JSONL(Relation) format -->
       <div v-if="selected === 'JSONL(Relation)'">
         <p class="body-1">For readability, the above format can be displayed as follows:</p>
         <v-sheet :dark="!$vuetify.theme.dark" :light="$vuetify.theme.dark" class="mb-5 pa-5">
           <pre>{{ JSON.stringify(JSON.parse(example.replaceAll("'", '"')), null, 4) }}</pre>
         </v-sheet>
       </div>
+      <!-- Display file uploader -->
       <file-pond
         v-if="selected && acceptedFileTypes !== '*'"
         ref="pond"
@@ -76,6 +81,7 @@
         @processfile="handleFilePondProcessFile"
         @removefile="handleFilePondRemoveFile"
       />
+      <!-- Display errors -->
       <v-data-table
         v-if="errors.length > 0"
         :headers="headers"
@@ -83,6 +89,7 @@
         class="elevation-1"
       ></v-data-table>
     </v-card-text>
+    <!-- Import button, go to import page when clicked -->
     <v-card-actions>
       <v-btn class="text-capitalize ms-2 primary" :disabled="isDisabled" @click="importDataset">
         {{ $t('generic.import') }}
@@ -157,6 +164,8 @@ export default {
         return {}
       }
     },
+
+
     textFields() {
       const asArray = Object.entries(this.properties)
       const textFields = asArray.filter(([_, value]) => !('enum' in value))
@@ -209,21 +218,26 @@ export default {
     }
   },
 
+  // initializes tha catalog and starts polling the data
   async created() {
     this.catalog = await this.$repositories.catalog.list(this.$route.params.id)
     this.pollData()
   },
 
+  // stops polling for data
   beforeDestroy() {
     clearInterval(this.polling)
   },
 
   methods: {
+    // add the file to the list of uploaded files
     handleFilePondProcessFile(error, file) {
       console.log(error)
       this.uploadedFiles.push(file)
       this.$nextTick()
     },
+
+    // remove the file from the list of uploaded files
     handleFilePondRemoveFile(error, file) {
       console.log(error)
       const index = this.uploadedFiles.findIndex((item) => item.id === file.id)
@@ -232,6 +246,8 @@ export default {
         this.$nextTick()
       }
     },
+
+    
     async importDataset() {
       this.isImporting = true
       const item = this.catalog.find((item) => item.displayName === this.selected)
@@ -243,6 +259,8 @@ export default {
         this.option
       )
     },
+
+    // polls the serer for updates on the status of the import task
     pollData() {
       this.polling = setInterval(async () => {
         if (this.taskId) {
@@ -260,6 +278,8 @@ export default {
         }
       }, 3000)
     },
+
+    // converts text to human-readable string
     toVisualize(text) {
       if (text === '\t') {
         return 'Tab'

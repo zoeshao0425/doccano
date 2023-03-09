@@ -1,10 +1,15 @@
+<!-- page that displays all the datasets -->
 <template>
   <v-card>
+    <!-- if the user is project admin, then show the following -->
     <v-card-title v-if="isProjectAdmin">
+      <!-- the action button, with options of exporting and importing -->
       <action-menu
         @upload="$router.push('dataset/import')"
         @download="$router.push('dataset/export')"
       />
+      <!-- delete button, clickable when selected at least one item-->
+      <!-- pop-up window shown when clicked -->
       <v-btn
         class="text-capitalize ms-2"
         :disabled="!canDelete"
@@ -14,6 +19,8 @@
         {{ $t('generic.delete') }}
       </v-btn>
       <v-spacer />
+      <!-- delete all button -->
+      <!-- pop-up window shown when clicked -->
       <v-btn
         :disabled="!item.count"
         class="text-capitalize"
@@ -22,6 +29,7 @@
       >
         {{ $t('generic.deleteAll') }}
       </v-btn>
+      <!-- pop-up window for delete -->
       <v-dialog v-model="dialogDelete">
         <form-delete
           :selected="selected"
@@ -30,10 +38,12 @@
           @remove="remove"
         />
       </v-dialog>
+      <!-- pop-up window for deleteAll -->
       <v-dialog v-model="dialogDeleteAll">
         <form-delete-bulk @cancel="dialogDeleteAll = false" @remove="removeAll" />
       </v-dialog>
     </v-card-title>
+    <!-- the datasets for projects using images -->
     <image-list
       v-if="isImageTask"
       v-model="selected"
@@ -43,6 +53,7 @@
       @update:query="updateQuery"
       @click:labeling="movePage"
     />
+    <!-- the datasets for projects using audios -->
     <audio-list
       v-else-if="isAudioTask"
       v-model="selected"
@@ -52,6 +63,7 @@
       @update:query="updateQuery"
       @click:labeling="movePage"
     />
+    <!-- the datasets for projects using documents -->
     <document-list
       v-else
       v-model="selected"
@@ -87,7 +99,9 @@ export default Vue.extend({
     FormDeleteBulk
   },
 
+  // uses the layout for a single project
   layout: 'project',
+
 
   validate({ params, query }) {
     // @ts-ignore
@@ -96,9 +110,9 @@ export default Vue.extend({
 
   data() {
     return {
-      dialogDelete: false,
-      dialogDeleteAll: false,
-      project: {} as Project,
+      dialogDelete: false,  // shows pop-up window for deleting selected datasets
+      dialogDeleteAll: false, // shows pop-up window for deleting all datasets
+      project: {} as Project, // current projects
       item: {} as ExampleListDTO,
       selected: [] as ExampleDTO[],
       isLoading: false,
@@ -113,19 +127,28 @@ export default Vue.extend({
   },
 
   computed: {
+    // returned true if at least one dataset is selected
     canDelete(): boolean {
       return this.selected.length > 0
     },
+
+    // returns the current project's id
     projectId(): string {
       return this.$route.params.id
     },
+
+    // returns true if the project is on images
     isImageTask(): boolean {
       const imageTasks = ['ImageClassification', 'ImageCaptioning', 'BoundingBox', 'Segmentation']
       return imageTasks.includes(this.project.projectType)
     },
+
+    // returns true if the project is on audios
     isAudioTask(): boolean {
       return this.project.projectType === 'Speech2text'
     },
+
+
     itemKey(): string {
       if (this.isImageTask || this.isAudioTask) {
         return 'filename'
@@ -135,12 +158,14 @@ export default Vue.extend({
     }
   },
 
+  // watch for changes and update every second
   watch: {
     '$route.query': _.debounce(function () {
       // @ts-ignore
       this.$fetch()
     }, 1000)
   },
+
 
   async created() {
     this.project = await this.$services.project.findById(this.projectId)
@@ -149,21 +174,27 @@ export default Vue.extend({
   },
 
   methods: {
+    // delete selected datesets
     async remove() {
       await this.$services.example.bulkDelete(this.projectId, this.selected)
       this.$fetch()
       this.dialogDelete = false
       this.selected = []
     },
+
+    // delete all datasets
     async removeAll() {
       await this.$services.example.bulkDelete(this.projectId, [])
       this.$fetch()
       this.dialogDeleteAll = false
       this.selected = []
     },
+
     updateQuery(query: object) {
       this.$router.push(query)
     },
+
+    // go to the annotating page
     movePage(query: object) {
       const link = getLinkToAnnotationPage(this.projectId, this.project.projectType)
       this.updateQuery({

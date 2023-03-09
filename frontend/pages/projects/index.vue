@@ -1,9 +1,14 @@
+<!-- The page that lists all the projects -->
 <template>
   <v-card>
+    <!-- If the person logging in is a staff, then shows create button -->
     <v-card-title v-if="isStaff">
+      <!-- Create button, link to page project/create if clicked -->
       <v-btn class="text-capitalize" color="primary" @click.stop="$router.push('projects/create')">
         {{ $t('generic.create') }}
       </v-btn>
+      <!-- Delete button  -->
+      <!-- Only clickable when a project is selected, pops up a delete window if clicked -->
       <v-btn
         class="text-capitalize ms-2"
         :disabled="!canDelete"
@@ -12,14 +17,17 @@
       >
         {{ $t('generic.delete') }}
       </v-btn>
+      <!-- Pop-up window when deleting a project -->
       <v-dialog v-model="dialogDelete">
+        <!-- Deletes the selected projects if clicked on yes, otherwise go back -->
         <form-delete :selected="selected" @cancel="dialogDelete = false" @remove="remove" />
       </v-dialog>
     </v-card-title>
+    <!-- The list of projects -->
     <project-list
       v-model="selected"
       :items="projects.items"
-      :is-loading="isLoading"
+      :is-loading="isLoading" 
       :total="projects.count"
       @update:query="updateQuery"
     />
@@ -41,19 +49,21 @@ export default Vue.extend({
     FormDelete,
     ProjectList
   },
+  // uses projects layout 
   layout: 'projects',
 
+  // checks that user is logged in
   middleware: ['check-auth', 'auth'],
 
   data() {
     return {
-      dialogDelete: false,
-      projects: {} as Page<Project>,
-      selected: [] as Project[],
+      dialogDelete: false, // showing delete pop-up window
+      projects: {} as Page<Project>, 
+      selected: [] as Project[], // a list of selected projects
       isLoading: false
     }
   },
-
+  // make sure projects are loaded before component is mounted
   async fetch() {
     this.isLoading = true
     this.projects = await this.$services.project.list(
@@ -63,12 +73,15 @@ export default Vue.extend({
   },
 
   computed: {
+    // map 'isStaff' getter from auth module
     ...mapGetters('auth', ['isStaff']),
+    // can delete a projects when at least one project is selected
     canDelete(): boolean {
       return this.selected.length > 0
     }
   },
 
+  // watch for changes and update the page every 1 second
   watch: {
     '$route.query': _.debounce(function () {
       // @ts-ignore
@@ -77,13 +90,17 @@ export default Vue.extend({
   },
 
   methods: {
+    // removes the selected projects
     async remove() {
       await this.$services.project.bulkDelete(this.selected)
       this.$fetch()
+      // clears the pop-up window
       this.dialogDelete = false
+      // deselect everything
       this.selected = []
     },
 
+    
     updateQuery(query: object) {
       this.$router.push(query)
     }

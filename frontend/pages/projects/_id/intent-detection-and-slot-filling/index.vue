@@ -1,6 +1,8 @@
+<!-- Intent Detection Page -->
 <template>
   <layout-text v-if="doc.id">
     <template #header>
+      <!-- The top toolbar for laptop users -->
       <toolbar-laptop
         :doc-id="doc.id"
         :enable-auto-labeling.sync="enableAutoLabeling"
@@ -11,11 +13,13 @@
         @click:clear-label="clear"
         @click:review="confirm"
       />
+      <!-- The top toolbar for mobile phone users -->
       <toolbar-mobile :total="docs.count" class="d-flex d-sm-none" />
     </template>
     <template #content>
       <v-card v-shortkey="shortKeys" @shortkey="addOrRemoveCategory">
         <v-card-title>
+          <!-- Displaying the labels and their count -->
           <label-group
             :labels="categoryTypes"
             :annotations="categories"
@@ -25,6 +29,7 @@
           />
         </v-card-title>
         <v-divider />
+        <!-- the annotation box -->
         <div class="annotation-text pa-4">
           <entity-editor
             :dark="$vuetify.theme.dark"
@@ -39,6 +44,7 @@
         </div>
       </v-card>
     </template>
+    <!-- sidebar on the right that displays the progress -->
     <template #sidebar>
       <annotation-progress :progress="progress" />
       <list-metadata :metadata="doc.meta" class="mt-4" />
@@ -67,6 +73,7 @@ export default {
     ToolbarMobile
   },
 
+  // Uses layout for annotation workspace
   layout: 'workspace',
 
   validate({ params, query }) {
@@ -107,13 +114,16 @@ export default {
     ...mapGetters('auth', ['isAuthenticated', 'getUsername', 'getUserId']),
     ...mapGetters('config', ['isRTL']),
 
+    // returns the current project's if
     projectId() {
       return this.$route.params.id
     },
 
+
     shortKeys() {
       return Object.fromEntries(this.categoryTypes.map((item) => [item.id, [item.suffixKey]]))
     },
+
 
     doc() {
       if (_.isEmpty(this.docs) || this.docs.items.length === 0) {
@@ -199,6 +209,7 @@ export default {
       }
     },
 
+    // clears all labelings
     async clear() {
       await this.$repositories.category.clear(this.projectId, this.doc.id)
       await this.$services.sequenceLabeling.clear(this.projectId, this.doc.id)
@@ -206,6 +217,7 @@ export default {
       await this.listCategory(this.doc.id)
     },
 
+    // label the doc using auto labeling
     async autoLabel(docId) {
       try {
         await this.$services.sequenceLabeling.autoLabel(this.projectId, docId)
@@ -214,6 +226,7 @@ export default {
       }
     },
 
+    // update the progress
     async updateProgress() {
       this.progress = await this.$repositories.metrics.fetchMyProgress(this.projectId)
     },

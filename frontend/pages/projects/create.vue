@@ -1,17 +1,26 @@
+<!-- Create Project Page -->
 <template>
   <v-card>
     <v-card-title>{{ $t('overview.createProjectTitle') }}</v-card-title>
     <v-card-text>
       <v-form v-model="valid">
+        <!-- selecting the type of project -->
         <project-type-field v-model="editedItem.projectType" />
+        <!-- input box to enter project name -->
         <project-name-field v-model="editedItem.name" outlined autofocus />
+        <!-- input box to enter project description -->
         <project-description-field v-model="editedItem.description" outlined />
+        <!-- input box to add tags -->
         <tag-list v-model="editedItem.tags" outlined />
+
+        <!-- if showExclusiveCategories is true, show the checkbox for allow single label -->
         <v-checkbox
           v-if="showExclusiveCategories"
           v-model="editedItem.exclusiveCategories"
           :label="$t('overview.allowSingleLabel')"
         />
+
+        <!-- if sequency labeling project is selected, display the following checkboxes -->
         <template v-if="isSequenceLabelingProject">
           <v-checkbox v-model="editedItem.allowOverlappingSpans" label="Allow overlapping spans" />
           <v-img
@@ -43,10 +52,12 @@
             </template>
           </v-checkbox>
         </template>
+        <!-- two checkboxes that applies for all project types -->
         <random-order-field v-model="editedItem.enableRandomOrder" />
         <sharing-mode-field v-model="editedItem.enableSharingMode" />
       </v-form>
     </v-card-text>
+    <!-- create button, create this project when clicked -->
     <v-card-actions class="ps-4">
       <v-btn
         :disabled="!valid"
@@ -74,6 +85,7 @@ import {
   SequenceLabeling
 } from '~/domain/models/project/project'
 
+// the default settings for a new project
 const initializeProject = () => {
   return {
     name: '',
@@ -100,30 +112,38 @@ export default Vue.extend({
     TagList
   },
 
+  // uses the projects layout
   layout: 'projects',
 
+  // checks that user is logged in
   middleware: ['check-auth', 'auth'],
 
   data() {
     return {
+      // true if the form is completed and valid
       valid: false,
+      // the project currently editing
       editedItem: initializeProject()
     }
   },
 
   computed: {
+    // return true if doc classification or image classfication is selected
     showExclusiveCategories(): boolean {
       return [DocumentClassification, ImageClassification].includes(this.editedItem.projectType)
     },
+    // returns true if sequencing labeling project is selected
     isSequenceLabelingProject(): boolean {
       return this.editedItem.projectType === SequenceLabeling
     }
   },
 
   methods: {
+    // creates a project
     async create() {
       const project = await this.$services.project.create(this.editedItem)
       this.$router.push(`/projects/${project.id}`)
+      // reset to original state with the default settings
       this.$nextTick(() => {
         this.editedItem = initializeProject()
       })
