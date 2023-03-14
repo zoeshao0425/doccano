@@ -1,3 +1,8 @@
+<!--
+This file is a Vue.js component that renders a group of project types as cards with images and labels. It uses the Vuetify framework for styling and contains event listeners that emit data when a card is selected. The data emitted is the project type associated with the selected card. The component receives the project type value as a prop and sets the default value to DocumentClassification. The component also uses a method to translate the project type name based on its index in the list of all project types. The file is written in TypeScript and imports several modules from other files.
+-->
+
+
 <template>
   <v-item-group v-model="selected" mandatory @change="$emit('input', allProjectTypes[selected])">
     <v-row no-gutters>

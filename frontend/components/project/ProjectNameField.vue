@@ -1,3 +1,9 @@
+<!--
+This is a Vue.js component for rendering a project name text field. The component accepts a "value" prop for setting the initial value of the text field, and emits an "input" event with the updated value whenever the user types into the field.
+
+The text field is required and has two validation rules for the project name. The validation rules are defined in the data section of the component and imported from the domain/models/project/project file. The component displays an error message for each validation rule if the user enters invalid input.
+-->
+
 <template>
   <v-text-field
     v-bind="$attrs"
