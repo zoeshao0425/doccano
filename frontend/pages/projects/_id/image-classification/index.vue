@@ -1,6 +1,7 @@
 <template>
   <layout-text v-if="image.id">
     <template #header>
+      <!-- The toolbar that appears in the header -->
       <toolbar-laptop
         :doc-id="image.id"
         :enable-auto-labeling.sync="enableAutoLabeling"
@@ -11,6 +12,7 @@
         @click:clear-label="clear"
         @click:review="confirm"
       >
+        <!-- Button group that toggles between displaying labels and a dropdown to select labels -->
         <v-btn-toggle v-model="labelOption" mandatory class="ms-2">
           <v-btn icon>
             <v-icon>{{ mdiFormatListBulleted }}</v-icon>
@@ -20,11 +22,13 @@
           </v-btn>
         </v-btn-toggle>
       </toolbar-laptop>
+       <!--toolbar on mobile devices -->
       <toolbar-mobile :total="images.count" class="d-flex d-sm-none" />
     </template>
     <template #content>
       <v-card v-shortkey="shortKeys" @shortkey="addOrRemove">
         <v-card-title>
+          <!-- A component that displays a group of labels to select from -->
           <label-group
             v-if="labelOption === 0"
             :labels="labels"
@@ -33,6 +37,7 @@
             @add="add"
             @remove="remove"
           />
+          <!-- A component that displays a dropdown to select a label from -->
           <label-select
             v-else
             :labels="labels"
@@ -43,11 +48,14 @@
           />
         </v-card-title>
         <v-divider />
+        <!-- The image that is being labeled -->
         <v-img contain :src="image.url" :max-height="imageSize.height" class="grey lighten-2" />
       </v-card>
     </template>
     <template #sidebar>
+      <!-- displays the user's progress in the task  -->
       <annotation-progress :progress="progress" />
+      <!-- displays metadata about the image-->
       <list-metadata :metadata="image.meta" class="mt-4" />
     </template>
   </layout-text>
@@ -79,10 +87,12 @@ export default {
   },
   layout: 'workspace',
 
+  // validate whether the parameters and query strings are in the correct format
   validate({ params, query }) {
     return /^\d+$/.test(params.id) && /^\d+$/.test(query.page)
   },
 
+  // initializes state variables and methods used by the component
   setup() {
     const { app } = useContext()
     const { state, getLabelList, shortKeys } = useLabelList(app.$services.categoryType)
@@ -111,6 +121,7 @@ export default {
     }
   },
 
+  // fetches the data needed for the component from the server
   async fetch() {
     this.images = await this.$services.example.fetchOne(
       this.projectId,
@@ -128,9 +139,12 @@ export default {
   },
 
   computed: {
+    // gets the project ID from the route parameters
     projectId() {
       return this.$route.params.id
     },
+
+    // gets the first image in the list of images fetched from the server
     image() {
       if (_.isEmpty(this.images) || this.images.items.length === 0) {
         return {}
@@ -140,6 +154,7 @@ export default {
     }
   },
 
+  // watches for changes to the query parameters and enables auto labeling if necessary
   watch: {
     '$route.query': '$fetch',
     async enableAutoLabeling(val) {
@@ -150,6 +165,7 @@ export default {
     }
   },
 
+  // fetches the label list and project information when the component is created
   async created() {
     this.getLabelList(this.projectId)
     this.project = await this.$services.project.findById(this.projectId)
@@ -157,14 +173,18 @@ export default {
   },
 
   methods: {
+    // retrieves the list of annotations for the current image from the server
     async list(imageId) {
       this.annotations = await this.$repositories.category.list(this.projectId, imageId)
     },
 
+    // removes the specified annotation from the current image on the server
     async remove(id) {
       await this.$repositories.category.delete(this.projectId, this.image.id, id)
       await this.list(this.image.id)
     },
+
+    // adds the specified label to the current image as an annotation on the server
 
     async add(labelId) {
       const category = Category.create(labelId)
@@ -172,6 +192,7 @@ export default {
       await this.list(this.image.id)
     },
 
+    // adds or removes the specified label from the current image depending on whether it is already present or not
     async addOrRemove(event) {
       const labelId = parseInt(event.srcKey, 10)
       const annotation = this.annotations.find((item) => item.label === labelId)
@@ -181,7 +202,8 @@ export default {
         await this.add(labelId)
       }
     },
-
+    
+    // sets the height and width of the image so that it fits within the available space
     async clear() {
       await this.$repositories.category.clear(this.projectId, this.image.id)
       await this.list(this.image.id)

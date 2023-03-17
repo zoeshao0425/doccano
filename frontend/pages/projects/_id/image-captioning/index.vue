@@ -1,6 +1,7 @@
 <template>
   <layout-text v-if="image.id">
     <template #header>
+      <!-- toolbar for annotation controls -->
       <toolbar-laptop
         :doc-id="image.id"
         :enable-auto-labeling.sync="enableAutoLabeling"
@@ -11,6 +12,8 @@
         @click:clear-label="clear"
         @click:review="confirm"
       >
+      <!-- button toggle for selecting the label option -->
+      <v-btn icon>
         <v-btn-toggle v-model="labelOption" mandatory class="ms-2">
           <v-btn icon>
             <v-icon>{{ mdiFormatListBulleted }}</v-icon>
@@ -19,11 +22,15 @@
             <v-icon>{{ mdiText }}</v-icon>
           </v-btn>
         </v-btn-toggle>
+      </v-btn>
       </toolbar-laptop>
+      <!-- mobile version of the toolbar -->
       <toolbar-mobile :total="images.count" class="d-flex d-sm-none" />
     </template>
+    <!-- contains the image and the annotation box -->
     <template #content>
       <v-card>
+        <!-- image being annotated -->
         <v-img contain :src="image.url" :max-height="imageSize.height" class="grey lighten-2" />
         <seq2seq-box
           :annotations="annotations"
@@ -34,7 +41,9 @@
       </v-card>
     </template>
     <template #sidebar>
+      <!-- progress bar showing the annotation progress for the task -->
       <annotation-progress :progress="progress" />
+      <!-- list of metadata associated with the image -->
       <list-metadata :metadata="image.meta" class="mt-4" />
     </template>
   </layout-text>

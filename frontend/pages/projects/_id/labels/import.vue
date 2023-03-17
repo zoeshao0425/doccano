@@ -1,4 +1,5 @@
 <template>
+  <!-- Import form component with error message and event listeners -->
   <form-import :error-message="errorMessage" @clear="clearErrorMessage" @upload="upload" />
 </template>
 
@@ -14,6 +15,7 @@ export default Vue.extend({
 
   layout: 'project',
 
+  // Validation function to check if user can define label
   validate({ params, query, app }) {
     if (!['category', 'span', 'relation'].includes(query.type as string)) {
       return false
@@ -33,10 +35,12 @@ export default Vue.extend({
   },
 
   computed: {
+    // Get project id from route params
     projectId(): string {
       return this.$route.params.id
     },
 
+    // Get appropriate service based on the query type
     service(): any {
       const type = this.$route.query.type
       if (type === 'category') {
@@ -50,6 +54,7 @@ export default Vue.extend({
   },
 
   methods: {
+    // Upload file to server and redirect to label list page
     async upload(file: File) {
       try {
         await this.service.upload(this.projectId, file)
@@ -59,6 +64,7 @@ export default Vue.extend({
       }
     },
 
+    // Clear error message
     clearErrorMessage() {
       this.errorMessage = ''
     }

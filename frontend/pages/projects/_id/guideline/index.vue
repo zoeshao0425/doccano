@@ -1,4 +1,5 @@
 <template>
+  <!-- The editor component is defined here -->
   <editor
     ref="toastuiEditor"
     :initial-value="project.guideline"
@@ -24,6 +25,7 @@ export default {
 
   layout: 'project',
 
+  // Validate that the id parameter is a number
   validate({ params }) {
     return /^\d+$/.test(params.id)
   },
@@ -38,6 +40,7 @@ export default {
     }
   },
 
+  // A lifecycle hook that is called when the component is mounted
   async mounted() {
     const projectId = this.$route.params.id
     this.project = await this.$services.project.findById(projectId)
@@ -46,6 +49,7 @@ export default {
   },
 
   methods: {
+    // A debounced function that is called when the editor content changes
     updateProject: _.debounce(function () {
       if (this.mounted) {
         this.project.guideline = this.$refs.toastuiEditor.invoke('getMarkdown')

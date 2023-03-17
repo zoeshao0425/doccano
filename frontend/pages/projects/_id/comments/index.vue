@@ -1,6 +1,7 @@
 <template>
   <v-card>
     <v-card-title>
+      <!-- Delete button that opens a dialog when clicked -->
       <v-btn
         class="text-capitalize ms-2"
         :disabled="!canDelete"
@@ -9,10 +10,13 @@
       >
         {{ $t('generic.delete') }}
       </v-btn>
+      <!-- Dialog for confirming deletion of comments -->
       <v-dialog v-model="dialogDelete">
         <form-delete :selected="selected" @cancel="dialogDelete = false" @remove="remove" />
       </v-dialog>
     </v-card-title>
+
+    <!-- List of comments -->
     <comment-list
       v-model="selected"
       :items="item.items"
@@ -41,6 +45,7 @@ export default Vue.extend({
   },
   layout: 'project',
 
+  // Validation to check if the parameter passed in the URL is a number
   validate({ params }) {
     return /^\d+$/.test(params.id)
   },
@@ -55,6 +60,7 @@ export default Vue.extend({
     }
   },
 
+  // Fetches the list of comments and the project details
   async fetch() {
     this.isLoading = true
     this.project = await this.$services.project.findById(this.projectId)
@@ -63,15 +69,19 @@ export default Vue.extend({
   },
 
   computed: {
+    // Checks if any comments are selected for deletion
     canDelete(): boolean {
       return this.selected.length > 0
     },
+
+    // Retrieves the project ID from the URL parameter
     projectId() {
       return this.$route.params.id
     }
   },
 
   watch: {
+    // Debounces the fetching of comments when query parameters change
     '$route.query': _.debounce(function () {
       // @ts-ignore
       this.$fetch()
@@ -79,15 +89,20 @@ export default Vue.extend({
   },
 
   methods: {
+    // Deletes the selected comments in bulk and updates the list of comments
     async remove() {
       await this.$repositories.comment.deleteBulk(this.projectId, this.selected)
       this.$fetch()
       this.dialogDelete = false
       this.selected = []
     },
+
+    // Updates the query parameters in the URL
     updateQuery(query: object) {
       this.$router.push(query)
     },
+
+    // Redirects to the annotation page with updated query parameters
     movePage(query: object) {
       const link = getLinkToAnnotationPage(this.projectId, this.project.projectType)
       this.updateQuery({
